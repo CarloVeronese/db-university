@@ -17,13 +17,20 @@ QUERY 6:
 - SELECT DISTINCT `departments`.`name` AS `department_name`, `teachers`.* FROM `teachers` INNER JOIN `course_teacher` ON `course_teacher`.`teacher_id` = `teachers`.`id` INNER JOIN `courses` ON `course_teacher`.`course_id` = `courses`.`id` INNER JOIN `degrees` ON `courses`.`degree_id` = `degrees`.`id` INNER JOIN `departments` ON `degrees`.`department_id` = `departments`.`id` WHERE `departments`.`name` = 'Dipartimento di Matematica';
 
 QUERY 7 (BONUS)
-- SELECT CONCAT(`students`.`name`, ' ',`students`.`surname`) AS `student`, `courses`.`name`, COUNT(`exams`.`id`) AS `attempts`, MAX(`exam_student`.`vote`) AS `max_score`
-FROM `students`
-INNER JOIN `exam_student`
-ON `students`.`id` = `exam_student`.`student_id`
-INNER JOIN `exams`
-ON `exam_student`.`exam_id` = `exams`.`id`
-INNER JOIN `courses`
-ON `courses`.`id` = `exams`.`course_id`
-WHERE `exam_student`.`vote` >= 18
-GROUP BY `students`.`id`, `courses`.`id`
+- SELECT
+    CONCAT(
+        `students`.`name`,
+        ' ',
+        `students`.`surname`
+    ) AS `student`,
+    COUNT(`exams`.`id`) AS `attempts`,
+    MAX(`exam_student`.`vote`) AS `max_score`
+FROM
+    `students`
+INNER JOIN `exam_student` ON `students`.`id` = `exam_student`.`student_id`
+INNER JOIN `exams` ON `exam_student`.`exam_id` = `exams`.`id`
+GROUP BY
+    `students`.`id`
+HAVING
+    `max_score` >= 18
+    
